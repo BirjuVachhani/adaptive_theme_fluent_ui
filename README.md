@@ -1,5 +1,3 @@
-![adaptive_theme](https://github.com/BirjuVachhani/adaptive_theme/blob/main/banner.png)
-
 # Adaptive Theme For Fluent UI
 
 This is an extension package for [Adaptive Theme](https://pub.dev/packages/adaptive_theme) that provides support
@@ -41,7 +39,7 @@ Checkout [Adaptive Theme](https://pub.dev/packages/adaptive_theme) for more info
 You are most welcome to contribute to this project!
 
 Please have a look
-at [Contributing Guidelines](https://github.com/BirjuVachhani/adaptive_theme/blob/main/CONTRIBUTING.md), before
+at [Contributing Guidelines](https://github.com/BirjuVachhani/adaptive_theme_fluent_ui/blob/main/CONTRIBUTING.md), before
 contributing and proposing a change.
 
 #### Liked Adaptive Theme?
