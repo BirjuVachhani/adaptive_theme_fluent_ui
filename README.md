@@ -19,8 +19,22 @@ dependencies:
 ## How to use
 
 ```dart
-// TODO:
+import 'package:fluent_ui/fluent_ui.dart';
+
+FluentAdaptiveTheme(
+  light: ThemeData.light(),
+  dark: ThemeData.dark(),
+  initial: savedThemeMode ?? AdaptiveThemeMode.light,
+  builder: (theme, darkTheme) => FluentApp(
+  title: 'Fluent Adaptive Theme Demo',
+  theme: theme,
+  darkTheme: darkTheme,
+  home: MyHomePage(),
+  ),
+);
 ```
+
+Checkout [Adaptive Theme](https://pub.dev/packages/adaptive_theme) for more information.
 
 ## Contribution
 
