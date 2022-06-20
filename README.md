@@ -8,7 +8,7 @@ checkout [Adaptive Theme](https://pub.dev/packages/adaptive_theme) docs.
 
 ## Getting Started
 
-add following dependencies to your pubspec.yaml
+add following dependencies to your `pubspec.yaml`
 
 ```yaml
 dependencies:
@@ -26,10 +26,10 @@ FluentAdaptiveTheme(
   dark: ThemeData.dark(),
   initial: savedThemeMode ?? AdaptiveThemeMode.light,
   builder: (theme, darkTheme) => FluentApp(
-  title: 'Fluent Adaptive Theme Demo',
-  theme: theme,
-  darkTheme: darkTheme,
-  home: MyHomePage(),
+    title: 'Fluent Adaptive Theme Demo',
+    theme: theme,
+    darkTheme: darkTheme,
+    home: MyHomePage(),
   ),
 );
 ```
