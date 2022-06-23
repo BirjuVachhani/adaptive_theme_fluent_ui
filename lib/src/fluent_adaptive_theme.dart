@@ -16,24 +16,23 @@
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/scheduler.dart';
 
 /// Builder function to build themed widgets
 typedef FluentAdaptiveThemeBuilder = Widget Function(
     ThemeData light, ThemeData dark);
 
 /// Widget that allows to switch themes dynamically. This is intended to be
-/// used above [MaterialApp].
+/// used above [FluentApp].
 /// Example:
 ///
-/// AdaptiveTheme(
+/// FluentAdaptiveTheme(
 ///   light: lightTheme,
 ///   dark: darkTheme,
 ///   initial: AdaptiveThemeMode.light,
-///   builder: (theme, darkTheme) => MaterialApp(
+///   builder: (theme, darkTheme) => FluentApp(
 ///     theme: theme,
 ///     darkTheme: darkTheme,
-///     home: MyHomePage(),
+///     home: MyHomePage(key: ValueKey(theme)),
 ///   ),
 /// );
 class FluentAdaptiveTheme extends StatefulWidget {
@@ -47,7 +46,7 @@ class FluentAdaptiveTheme extends StatefulWidget {
   final AdaptiveThemeMode initial;
 
   /// Provides a builder with access of light and dark theme. Intended to
-  /// be used to return [MaterialApp].
+  /// be used to return [FluentApp].
   final FluentAdaptiveThemeBuilder builder;
 
   /// Key used to store theme information into shared-preferences. If you want
@@ -76,7 +75,8 @@ class FluentAdaptiveTheme extends StatefulWidget {
 
   /// Returns reference of the [AdaptiveThemeManager] which allows access of
   /// the state object of [FluentAdaptiveTheme] in a restrictive way.
-  /// This returns null if the state instance of [FluentAdaptiveTheme] is not found.
+  /// This returns null if the state instance of [FluentAdaptiveTheme] is
+  /// not found.
   static AdaptiveThemeManager<ThemeData>? maybeOf(BuildContext context) {
     final state = context.findAncestorStateOfType<State<FluentAdaptiveTheme>>();
     if (state == null) return null;
@@ -85,40 +85,27 @@ class FluentAdaptiveTheme extends StatefulWidget {
 
   /// returns most recent theme mode. This can be used to eagerly get previous
   /// theme mode inside main method before calling [runApp].
-  static Future<AdaptiveThemeMode?> getThemeMode() async {
-    return (await ThemePreferences.fromPrefs())?.mode;
-  }
+  static Future<AdaptiveThemeMode?> getThemeMode() =>
+      AdaptiveTheme.getThemeMode();
 }
 
 class _FluentAdaptiveThemeState extends State<FluentAdaptiveTheme>
     with WidgetsBindingObserver, AdaptiveThemeManager<ThemeData> {
-  late ThemeData _theme;
-  late ThemeData _darkTheme;
-  late ThemePreferences _preferences;
-  late ValueNotifier<AdaptiveThemeMode> _modeChangeNotifier;
-
   @override
   void initState() {
     super.initState();
-    _theme = widget.light.copyWith();
-    _modeChangeNotifier = ValueNotifier(widget.initial);
-    _darkTheme = widget.dark.copyWith();
-    _preferences = ThemePreferences.initial(mode: widget.initial);
-    ThemePreferences.fromPrefs().then((pref) {
-      if (pref == null) {
-        _preferences.save();
-      } else {
-        _preferences = pref;
-        if (mounted) setState(() {});
-      }
-    });
+    initialize(
+      light: widget.light,
+      dark: widget.dark,
+      initial: widget.initial,
+    );
     WidgetsBinding.instance.addObserver(this);
   }
 
-  // When device theme mode is changed, Flutter does not rebuild
-  /// [CupertinoApp] and Because of that, if theme is set to
-  /// [AdaptiveThemeMode.system]. it doesn't take effect. This check mitigates
-  /// that and refreshes the UI to use new theme if needed.
+  /// When device theme mode is changed, Flutter does not rebuild
+  /// app sometimes and Because of that, if theme is set to
+  /// [AdaptiveThemeMode.system], it doesn't take effect.
+  /// This check mitigates that and refreshes the UI to use new theme if needed.
   @override
   void didChangePlatformBrightness() {
     super.didChangePlatformBrightness();
@@ -126,75 +113,34 @@ class _FluentAdaptiveThemeState extends State<FluentAdaptiveTheme>
   }
 
   @override
-  ValueNotifier<AdaptiveThemeMode> get modeChangeNotifier =>
-      _modeChangeNotifier;
-
-  @override
-  ThemeData get theme {
-    if (_preferences.mode.isSystem) {
-      final brightness = SchedulerBinding.instance.window.platformBrightness;
-      return brightness == Brightness.light ? _theme : _darkTheme;
-    }
-    return _preferences.mode.isDark ? _darkTheme : _theme;
-  }
-
-  @override
-  ThemeData get lightTheme => _theme;
-
-  @override
-  ThemeData get darkTheme => _darkTheme;
-
-  @override
-  AdaptiveThemeMode get mode => _preferences.mode;
-
-  @override
   bool get isDefault =>
-      _theme == widget.light &&
-      _darkTheme == widget.dark &&
-      _preferences.mode == _preferences.defaultMode;
+      theme == widget.light && darkTheme == widget.dark && mode == defaultMode;
 
   @override
   Brightness get brightness => theme.brightness;
 
   @override
-  void setThemeMode(AdaptiveThemeMode mode) {
-    _preferences.mode = mode;
-    if (mounted) setState(() {});
-    _modeChangeNotifier.value = mode;
-    _preferences.save();
-  }
-
-  @override
-  void setTheme({
-    required ThemeData light,
-    ThemeData? dark,
-    bool notify = true,
-  }) {
-    _theme = light;
-    if (dark != null) _darkTheme = dark;
-    if (notify && mounted) setState(() {});
-  }
-
-  @override
-  Future<bool> persist() async => _preferences.save();
-
-  @override
   Future<bool> reset() async {
-    _preferences.reset();
-    _theme = widget.light.copyWith();
-    _darkTheme = widget.dark.copyWith();
-    if (mounted) setState(() {});
-    modeChangeNotifier.value = mode;
-    return _preferences.save();
+    setTheme(
+      light: widget.light,
+      dark: widget.dark,
+      notify: false,
+    );
+    return super.reset();
   }
 
   @override
   Widget build(BuildContext context) =>
-      widget.builder(theme, _preferences.mode.isLight ? _theme : _darkTheme);
+      widget.builder(theme, mode.isLight ? theme : darkTheme);
+
+  @override
+  void updateState() {
+    if (mounted) setState(() {});
+  }
 
   @override
   void dispose() {
-    _modeChangeNotifier.dispose();
+    modeChangeNotifier.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
