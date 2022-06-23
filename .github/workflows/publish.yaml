@@ -1,0 +1,32 @@
+name: Publish Package
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter --version
+      - name: Install dependencies
+        run: flutter packages get
+      - name: Format code
+        run: dart format --fix .
+      - name: Tests
+        run: flutter test .
+      - name: Dry Run
+        run: flutter pub publish --dry-run
+      - name: Publish
+        uses: k-paxian/dart-package-publisher@v1.3
+        with:
+          credentialJson: ${{ secrets.CREDENTIAL_JSON }}
+          flutter: true
+          skipTests: true
+          dryRunOnly: false
