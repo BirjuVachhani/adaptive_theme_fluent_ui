@@ -50,18 +50,22 @@ class _MyHomePageState extends State<MyHomePage> {
             PaneItem(
               icon: const Icon(FluentIcons.home),
               title: const Text('Home'),
+              body: const Body(),
             ),
             PaneItem(
               icon: const Icon(FluentIcons.contact),
               title: const Text('Contacts'),
+              body: const Center(child: Text('Contacts')),
             ),
             PaneItem(
               icon: const Icon(FluentIcons.accounts),
               title: const Text('Accounts'),
+              body: const Center(child: Text('Accounts')),
             ),
             PaneItem(
               icon: const Icon(FluentIcons.settings),
               title: const Text('Settings'),
+              body: const Center(child: Text('Settings')),
             ),
           ],
           selected: currentIndex,
@@ -69,72 +73,80 @@ class _MyHomePageState extends State<MyHomePage> {
             setState(() => currentIndex = index);
           },
         ),
-        content: SafeArea(
-          child: SizedBox.expand(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Spacer(),
-                const Text(
-                  'Current Theme Mode',
-                  style: TextStyle(
-                    fontSize: 20,
-                    letterSpacing: 0.8,
-                  ),
-                ),
-                Text(
-                  FluentAdaptiveTheme.of(context).mode.modeName.toUpperCase(),
-                  style: const TextStyle(
-                    fontSize: 24,
-                    height: 2.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Spacer(),
-                FilledButton(
-                  onPressed: () =>
-                      FluentAdaptiveTheme.of(context).toggleThemeMode(),
-                  child: const Text('Toggle Theme Mode'),
-                ),
-                const SizedBox(height: 8),
-                FilledButton(
-                  onPressed: () => FluentAdaptiveTheme.of(context).setDark(),
-                  child: const Text('Set Dark'),
-                ),
-                const SizedBox(height: 8),
-                FilledButton(
-                  onPressed: () => FluentAdaptiveTheme.of(context).setLight(),
-                  child: const Text('set Light'),
-                ),
-                const SizedBox(height: 8),
-                FilledButton(
-                  onPressed: () => FluentAdaptiveTheme.of(context).setSystem(),
-                  child: const Text('Set System Default'),
-                ),
-                const SizedBox(height: 8),
-                FilledButton(
-                  onPressed: () => FluentAdaptiveTheme.of(context).setTheme(
-                    light: ThemeData(
-                      brightness: Brightness.light,
-                      accentColor: Colors.red,
-                    ),
-                    dark: ThemeData(
-                      brightness: Brightness.dark,
-                      accentColor: Colors.red,
-                    ),
-                  ),
-                  child: const Text('Set Custom Theme'),
-                ),
-                const SizedBox(height: 8),
-                FilledButton(
-                  onPressed: () => FluentAdaptiveTheme.of(context).reset(),
-                  child: const Text('Reset to Default Themes'),
-                ),
-                const Spacer(),
-              ],
+      ),
+    );
+  }
+}
+
+class Body extends StatelessWidget {
+  const Body({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: SizedBox.expand(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Spacer(),
+            const Text(
+              'Current Theme Mode',
+              style: TextStyle(
+                fontSize: 20,
+                letterSpacing: 0.8,
+              ),
             ),
-          ),
+            Text(
+              FluentAdaptiveTheme.of(context).mode.modeName.toUpperCase(),
+              style: const TextStyle(
+                fontSize: 24,
+                height: 2.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Spacer(),
+            FilledButton(
+              onPressed: () =>
+                  FluentAdaptiveTheme.of(context).toggleThemeMode(),
+              child: const Text('Toggle Theme Mode'),
+            ),
+            const SizedBox(height: 8),
+            FilledButton(
+              onPressed: () => FluentAdaptiveTheme.of(context).setDark(),
+              child: const Text('Set Dark'),
+            ),
+            const SizedBox(height: 8),
+            FilledButton(
+              onPressed: () => FluentAdaptiveTheme.of(context).setLight(),
+              child: const Text('set Light'),
+            ),
+            const SizedBox(height: 8),
+            FilledButton(
+              onPressed: () => FluentAdaptiveTheme.of(context).setSystem(),
+              child: const Text('Set System Default'),
+            ),
+            const SizedBox(height: 8),
+            FilledButton(
+              onPressed: () => FluentAdaptiveTheme.of(context).setTheme(
+                light: ThemeData(
+                  brightness: Brightness.light,
+                  accentColor: Colors.red,
+                ),
+                dark: ThemeData(
+                  brightness: Brightness.dark,
+                  accentColor: Colors.red,
+                ),
+              ),
+              child: const Text('Set Custom Theme'),
+            ),
+            const SizedBox(height: 8),
+            FilledButton(
+              onPressed: () => FluentAdaptiveTheme.of(context).reset(),
+              child: const Text('Reset to Default Themes'),
+            ),
+            const Spacer(),
+          ],
         ),
       ),
     );
