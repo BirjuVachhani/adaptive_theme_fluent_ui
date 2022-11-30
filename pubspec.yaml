@@ -1,6 +1,6 @@
 name: adaptive_theme_fluent_ui
 description: An extension package of adaptive_theme library that supports dynamic theming for fluent_ui package.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/birjuvachhani/adaptive_theme_fluent_ui
 
 environment:
