@@ -15,8 +15,6 @@ jobs:
   tests_and_coverage:
     runs-on: ubuntu-latest
     steps:
-      - name: Tap Google's Dart formula repository
-        run: brew tap dart-lang/dart
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
