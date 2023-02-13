@@ -2,8 +2,8 @@
 // Created Date: April 20, 2022
 
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:adaptive_theme_fluent_ui/adaptive_theme_fluent_ui.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
 class FluentExample extends StatelessWidget {
   final AdaptiveThemeMode? savedThemeMode;
@@ -16,8 +16,8 @@ class FluentExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FluentAdaptiveTheme(
-      light: ThemeData.light(),
-      dark: ThemeData.dark(),
+      light: FluentThemeData.light(),
+      dark: FluentThemeData.dark(),
       initial: savedThemeMode ?? AdaptiveThemeMode.light,
       builder: (theme, darkTheme) => FluentApp(
         title: 'Fluent Adaptive Theme Demo',
@@ -129,11 +129,11 @@ class Body extends StatelessWidget {
             const SizedBox(height: 8),
             FilledButton(
               onPressed: () => FluentAdaptiveTheme.of(context).setTheme(
-                light: ThemeData(
+                light: FluentThemeData(
                   brightness: Brightness.light,
                   accentColor: Colors.red,
                 ),
-                dark: ThemeData(
+                dark: FluentThemeData(
                   brightness: Brightness.dark,
                   accentColor: Colors.red,
                 ),

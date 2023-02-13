@@ -7,7 +7,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 /// Builder function to build themed widgets
 typedef FluentAdaptiveThemeBuilder = Widget Function(
-    ThemeData light, ThemeData dark);
+    FluentThemeData light, FluentThemeData dark);
 
 /// Widget that allows to switch themes dynamically. This is intended to be
 /// used above [FluentApp].
@@ -25,10 +25,10 @@ typedef FluentAdaptiveThemeBuilder = Widget Function(
 /// );
 class FluentAdaptiveTheme extends StatefulWidget {
   /// Represents the light theme for the app.
-  final ThemeData light;
+  final FluentThemeData light;
 
   /// Represents the dark theme for the app.
-  final ThemeData dark;
+  final FluentThemeData dark;
 
   /// Indicates which [AdaptiveThemeMode] to use initially.
   final AdaptiveThemeMode initial;
@@ -47,7 +47,7 @@ class FluentAdaptiveTheme extends StatefulWidget {
   const FluentAdaptiveTheme({
     super.key,
     required this.light,
-    ThemeData? dark,
+    FluentThemeData? dark,
     required this.initial,
     required this.builder,
   }) : dark = dark ?? light;
@@ -57,23 +57,23 @@ class FluentAdaptiveTheme extends StatefulWidget {
 
   /// Returns reference of the [AdaptiveThemeManager] which allows access of
   /// the state object of [FluentAdaptiveTheme] in a restrictive way.
-  static AdaptiveThemeManager<ThemeData> of(BuildContext context) {
+  static AdaptiveThemeManager<FluentThemeData> of(BuildContext context) {
     context.dependOnInheritedWidgetOfExactType<
-        InheritedAdaptiveTheme<ThemeData>>();
+        InheritedAdaptiveTheme<FluentThemeData>>();
     return context.findAncestorStateOfType<State<FluentAdaptiveTheme>>()!
-        as AdaptiveThemeManager<ThemeData>;
+        as AdaptiveThemeManager<FluentThemeData>;
   }
 
   /// Returns reference of the [AdaptiveThemeManager] which allows access of
   /// the state object of [FluentAdaptiveTheme] in a restrictive way.
   /// This returns null if the state instance of [FluentAdaptiveTheme] is
   /// not found.
-  static AdaptiveThemeManager<ThemeData>? maybeOf(BuildContext context) {
+  static AdaptiveThemeManager<FluentThemeData>? maybeOf(BuildContext context) {
     context.dependOnInheritedWidgetOfExactType<
-        InheritedAdaptiveTheme<ThemeData>>();
+        InheritedAdaptiveTheme<FluentThemeData>>();
     final state = context.findAncestorStateOfType<State<FluentAdaptiveTheme>>();
     if (state == null) return null;
-    return state as AdaptiveThemeManager<ThemeData>;
+    return state as AdaptiveThemeManager<FluentThemeData>;
   }
 
   /// returns most recent theme mode. This can be used to eagerly get previous
@@ -83,7 +83,7 @@ class FluentAdaptiveTheme extends StatefulWidget {
 }
 
 class _FluentAdaptiveThemeState extends State<FluentAdaptiveTheme>
-    with WidgetsBindingObserver, AdaptiveThemeManager<ThemeData> {
+    with WidgetsBindingObserver, AdaptiveThemeManager<FluentThemeData> {
   @override
   void initState() {
     super.initState();
@@ -124,7 +124,7 @@ class _FluentAdaptiveThemeState extends State<FluentAdaptiveTheme>
 
   @override
   Widget build(BuildContext context) {
-    return InheritedAdaptiveTheme(
+    return InheritedAdaptiveTheme<FluentThemeData>(
       manager: this,
       child: widget.builder(theme, mode.isLight ? theme : darkTheme),
     );

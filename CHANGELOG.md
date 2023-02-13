@@ -1,6 +1,7 @@
 # 1.1.0
 
 - Fix calling `AdaptiveTheme.of` or `CupertinoAdaptiveTheme.of` not creating a dependency on it.
+- Replace deprecated `ThemeData` with `FluentThemeData`.
 
 # 1.0.1
 
