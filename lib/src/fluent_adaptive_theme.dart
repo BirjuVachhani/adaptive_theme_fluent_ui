@@ -1,18 +1,6 @@
-/*
- * Copyright © 2020 Birju Vachhani
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright © 2022 Birju Vachhani. All rights reserved.
+// Use of this source code is governed by an Apache license that can be
+// found in the LICENSE file.
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -69,15 +57,20 @@ class FluentAdaptiveTheme extends StatefulWidget {
 
   /// Returns reference of the [AdaptiveThemeManager] which allows access of
   /// the state object of [FluentAdaptiveTheme] in a restrictive way.
-  static AdaptiveThemeManager<ThemeData> of(BuildContext context) =>
-      context.findAncestorStateOfType<State<FluentAdaptiveTheme>>()!
-          as AdaptiveThemeManager<ThemeData>;
+  static AdaptiveThemeManager<ThemeData> of(BuildContext context) {
+    context.dependOnInheritedWidgetOfExactType<
+        InheritedAdaptiveTheme<ThemeData>>();
+    return context.findAncestorStateOfType<State<FluentAdaptiveTheme>>()!
+        as AdaptiveThemeManager<ThemeData>;
+  }
 
   /// Returns reference of the [AdaptiveThemeManager] which allows access of
   /// the state object of [FluentAdaptiveTheme] in a restrictive way.
   /// This returns null if the state instance of [FluentAdaptiveTheme] is
   /// not found.
   static AdaptiveThemeManager<ThemeData>? maybeOf(BuildContext context) {
+    context.dependOnInheritedWidgetOfExactType<
+        InheritedAdaptiveTheme<ThemeData>>();
     final state = context.findAncestorStateOfType<State<FluentAdaptiveTheme>>();
     if (state == null) return null;
     return state as AdaptiveThemeManager<ThemeData>;
@@ -130,8 +123,12 @@ class _FluentAdaptiveThemeState extends State<FluentAdaptiveTheme>
   }
 
   @override
-  Widget build(BuildContext context) =>
-      widget.builder(theme, mode.isLight ? theme : darkTheme);
+  Widget build(BuildContext context) {
+    return InheritedAdaptiveTheme(
+      manager: this,
+      child: widget.builder(theme, mode.isLight ? theme : darkTheme),
+    );
+  }
 
   @override
   void updateState() {
