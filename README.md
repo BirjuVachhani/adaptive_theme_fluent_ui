@@ -20,8 +20,8 @@ dependencies:
 import 'package:fluent_ui/fluent_ui.dart';
 
 FluentAdaptiveTheme(
-  light: ThemeData.light(),
-  dark: ThemeData.dark(),
+  light: FluentThemeData.light(),
+  dark: FluentThemeData.dark(),
   initial: savedThemeMode ?? AdaptiveThemeMode.light,
   builder: (theme, darkTheme) => FluentApp(
     title: 'Fluent Adaptive Theme Demo',
