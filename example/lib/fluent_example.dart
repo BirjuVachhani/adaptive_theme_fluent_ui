@@ -19,6 +19,7 @@ class FluentExample extends StatelessWidget {
       light: FluentThemeData.light(),
       dark: FluentThemeData.dark(),
       initial: savedThemeMode ?? AdaptiveThemeMode.light,
+      debugShowFloatingThemeButton: true,
       builder: (theme, darkTheme) => FluentApp(
         title: 'Fluent Adaptive Theme Demo',
         theme: theme,

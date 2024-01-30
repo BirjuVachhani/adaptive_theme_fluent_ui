@@ -4,6 +4,7 @@
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 /// Builder function to build themed widgets
 typedef FluentAdaptiveThemeBuilder = Widget Function(
@@ -37,6 +38,10 @@ class FluentAdaptiveTheme extends StatefulWidget {
   /// be used to return [FluentApp].
   final FluentAdaptiveThemeBuilder builder;
 
+  /// Indicates whether to show floating theme mode switcher button or not.
+  /// This is ignored in release mode.
+  final bool debugShowFloatingThemeButton;
+
   /// Key used to store theme information into shared-preferences. If you want
   /// to persist theme mode changes even after shared-preferences
   /// is cleared (e.g. after log out), do not remove this [prefKey] key from
@@ -50,6 +55,7 @@ class FluentAdaptiveTheme extends StatefulWidget {
     FluentThemeData? dark,
     required this.initial,
     required this.builder,
+    this.debugShowFloatingThemeButton = false,
   }) : dark = dark ?? light;
 
   @override
@@ -84,6 +90,11 @@ class FluentAdaptiveTheme extends StatefulWidget {
 
 class _FluentAdaptiveThemeState extends State<FluentAdaptiveTheme>
     with WidgetsBindingObserver, AdaptiveThemeManager<FluentThemeData> {
+  late bool _debugShowFloatingThemeButton = widget.debugShowFloatingThemeButton;
+
+  @override
+  bool get debugShowFloatingThemeButton => _debugShowFloatingThemeButton;
+
   @override
   void initState() {
     super.initState();
@@ -106,6 +117,16 @@ class _FluentAdaptiveThemeState extends State<FluentAdaptiveTheme>
   }
 
   @override
+  void didUpdateWidget(covariant FluentAdaptiveTheme oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.debugShowFloatingThemeButton !=
+            oldWidget.debugShowFloatingThemeButton &&
+        _debugShowFloatingThemeButton != widget.debugShowFloatingThemeButton) {
+      _debugShowFloatingThemeButton = widget.debugShowFloatingThemeButton;
+    }
+  }
+
+  @override
   bool get isDefault =>
       theme == widget.light && darkTheme == widget.dark && mode == defaultMode;
 
@@ -124,9 +145,23 @@ class _FluentAdaptiveThemeState extends State<FluentAdaptiveTheme>
 
   @override
   Widget build(BuildContext context) {
+    final child = widget.builder(theme, mode.isLight ? theme : darkTheme);
+
     return InheritedAdaptiveTheme<FluentThemeData>(
       manager: this,
-      child: widget.builder(theme, mode.isLight ? theme : darkTheme),
+      child: Builder(
+        builder: (context) {
+          if (!kReleaseMode && _debugShowFloatingThemeButton) {
+            return DebugFloatingThemeButtonWrapper(
+              manager: this,
+              debugShow: true,
+              child: child,
+            );
+          }
+
+          return child;
+        },
+      ),
     );
   }
 
@@ -140,5 +175,11 @@ class _FluentAdaptiveThemeState extends State<FluentAdaptiveTheme>
     modeChangeNotifier.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void setDebugShowFloatingThemeButton(bool enabled) {
+    _debugShowFloatingThemeButton = enabled;
+    setState(() {});
   }
 }
