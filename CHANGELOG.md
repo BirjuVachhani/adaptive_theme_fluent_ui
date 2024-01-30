@@ -1,3 +1,8 @@
+# 1.3.0
+
+- Add support for dynamically changing debugShowFloatingThemeButton state using AdaptiveTheme.of(context).setDebugShowFloatingThemeButton(bool) method.
+- Allow reading state of debugShowFloatingThemeButton using AdaptiveTheme.of(context).debugShowFloatingThemeButton.
+
 # 1.2.0
 
 - Bump up minimum Flutter version to 3.10.0.
